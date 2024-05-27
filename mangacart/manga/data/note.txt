@@ -1,0 +1,1 @@
+Extract the main book_recommendation.pkl file and place it in data folder for using the recommendation system effectively

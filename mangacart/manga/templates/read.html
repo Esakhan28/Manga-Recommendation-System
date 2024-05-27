@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .menu {
+      background: #f0cd09;
+      height: 4rem;
+    }
+    .menu ol {
+      list-style-type: none;
+      margin: 0 auto;
+      padding: 0;
+    }
+    .menu > ol {
+      max-width: 1000px;
+      padding: 0 2rem;
+      display: flex;
+    }
+    .menu > ol > .menu-item {
+      flex: 1;
+      padding: 0.75rem 0;
+      position: relative;
+      line-height: 2.5rem;
+      text-align: center;
+    }
+    .menu > ol > .menu-item a {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: block;
+      color: #030000;
+    }
+    .menu > ol > .menu-item:after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      bottom: 5px;
+      left: calc(50% - 2px);
+      background: #080400;
+      will-change: transform;
+      transform: scale(0);
+      transition: transform 0.2s ease;
+    }
+    .menu > ol > .menu-item:hover:after {
+      transform: scale(1);
+    }
+    .menu > ol > .menu-item:not(.search-box):hover {
+      background-color: #f6e603; /* Add hover background color here */
+    }
+    .sub-menu {
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      display: none;
+      z-index: 1;
+    }
+    .menu-item:hover > .sub-menu {
+      display: block;
+    }
+    .sub-menu .menu-item {
+      padding: 0.75rem 0;
+      background: #f6e603;
+    }
+    .sub-menu .menu-item:hover {
+      background: #f0cd09;
+    }
+    .sub-menu .menu-item a {
+      padding: 0 0.75rem;
+    }
+    
+    html, body {
+      font-size: 16px;
+      font-family: "Fira Mono", monospace;
+      margin: 0;
+      background: #2A363B;
+      overflow-y: auto; /* Enable vertical scrolling */
+      overflow-x: hidden; /* Prevent horizontal scrolling on the body */
+    }
+    * {
+      box-sizing: border-box;
+    }
+    *:before, *:after {
+      box-sizing: inherit;
+    }
+    a {
+      text-decoration: none;
+    }
+    main {
+      display: flex;
+      flex-direction: column; /* Ensure main content flows vertically */
+      align-items: center;
+      padding: 50px;
+      font-family: "Roboto", sans-serif;
+    }
+    .book-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100wh;
+    height: 65vh; /* 65% of the viewport height */
+}
+
+.book {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* Set the width to cover the entire container */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px; /* Adjust padding as needed */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.book-card {
+    flex: 1;
+    max-width: 50%; /* Adjust as needed */
+}
+
+.book-card img {
+    width: 100%; /* Set the width to cover the entire container */
+    height: auto;
+    border-radius: 5px;
+}
+
+.book-details {
+    flex: 1;
+    padding-left: 20px; /* Adjust spacing between book card and details */
+}
+
+.book-details h2 {
+    font-size: 1.5rem; /* Increase font size */
+    margin-bottom: 10px; /* Increase spacing */
+    color: #fff;
+}
+
+.book-details p {
+    margin: 10px 0; /* Increase spacing */
+    font-size: 1.2rem; /* Increase font size */
+    color: #fff;
+}
+
+
+    .cards-container {
+      display: flex;
+      overflow-x: auto; /* Enable horizontal scrolling for cards */
+      width: 100%;
+      padding-bottom: 20px; /* Add some padding below the cards */
+      margin-top: 50px;
+    }
+    .card {
+      min-width: 280px;
+      height: 400px;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 10px 30px 5px rgba(0, 0, 0, 0.2);
+      margin-right: 15px; /* Add space between cards */
+    }
+    .card img {
+      position: absolute;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0.9;
+      transition: opacity 0.2s ease-out;
+    }
+    .card h2 {
+      position: absolute;
+      inset: auto auto 30px 20%;
+      margin: 0;
+      transition: inset 0.3s 0.3s ease-out;
+      font-family: "Roboto Condensed", sans-serif;
+      font-weight: normal;
+      text-transform: uppercase;
+      color: #f0cd09;
+      font-size: 50px;
+    }
+    .card p, .card a, .card h3 {
+      position: absolute;
+      opacity: 0;
+      max-width: 80%;
+      transition: opacity 0.3s ease-out;
+    }
+    .card h3 {
+      inset: auto auto 120px 30px;
+      color: #f0f0f0;
+    }
+    .card p {
+      inset: auto auto 80px 30px;
+      color: #f0f0f0;
+    }
+    .card a {
+      inset: auto auto 40px 30px;
+      color: inherit;
+      text-decoration: none;
+    }
+    .card:hover h2 {
+      inset: auto auto 60% 20%;
+      transition: inset 0.3s ease-out;
+      color: #f0cd09;
+    }
+    .card:hover p, .card:hover a, .card:hover h3 {
+      opacity: 1;
+      transition: opacity 0.5s 0.1s ease-in;
+    }
+    .card:hover img {
+      transition: opacity 0.3s ease-in;
+      opacity: 0.2;
+    }
+
+    .material-symbols-outlined {
+      vertical-align: left;
+    }
+    .read_button {
+      display: inline-flex;
+      align-items: center;
+      background-color: #f0cd09; /* Background color of the button */
+      color: #ffff; /* Text color */
+      padding: 0.75rem 1rem; /* Padding inside the button */
+      border: none; /* No border */
+      border-radius: 4px; /* Rounded corners */
+      text-decoration: none; /* Remove underline from the link */
+      font-size: 1rem; /* Font size */
+      cursor: pointer; /* Pointer cursor on hover */
+      transition: background-color 0.3s ease; /* Smooth background color transition */
+    }
+
+    .read_button:hover {
+      background-color: #090909; /* Background color on hover */
+      color: #fff;
+    }
+
+    .material-symbols-outlined {
+      margin-left: 0.5rem; /* Space between text and icon */
+      font-size: 1.25rem; /* Size of the icon */
+    }
+    .menu-item.search-box {
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-item.search-box input[type="text"] {
+        padding: 8px; /* Adjust padding as needed */
+        border: 1px solid #ccc; /* Add a border */
+        border-radius: 4px; /* Add some rounded corners */
+        width: 200px; /* Set the width of the input field */
+    }
+
+    .menu-item.search-box button {
+        padding: 8px 12px; /* Adjust padding as needed */
+        background-color: #070707; /* Set the background color */
+        color: #fff; /* Set the text color */
+        border: none; /* Remove border */
+        border-radius: 4px; /* Add some rounded corners */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        margin-left: 5px; /* Add some space between input field and button */
+    }
+    .menu-item.search-box button:hover {
+        background-color: #0056b3; /* Change background color on hover */
+    }
+
+  </style>
+</head>
+<body>
+    <nav class="menu">
+        <ol>
+          <li class="menu-item"><a href="/home">Home</a></li>
+          <li class="menu-item"><a href="/home">About</a></li>
+          <li class="menu-item">
+            <a href="/home">Top Pics</a>
+            <ol class="sub-menu">
+              <li class="menu-item"><a href="?filter=top10">Top 10</a></li>
+              <li class="menu-item"><a href="?filter=top50">Top 50</a></li>
+              <li class="menu-item"><a href="?filter=harryPotter">Harry Potter</a></li>
+            </ol>
+          </li>
+          <li class="menu-item"><a href="{% url 'admin_logout' %}">Log Out</a></li>
+          <li class="menu-item search-box">
+            <form method="GET" action="">
+                <input type="text" name="search" id="searchInput" placeholder="Search" value="{{ request.GET.search }}">
+            </form>
+          </li>
+        </ol>
+    </nav>
+    <main>
+      <div class="book-container">
+        <div class="book">
+          <div class="book-card">
+          <img src="{{ book.image_url }}" alt="https://images.unsplash.com/photo-1656618020911-1c7a937175fd?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTc1MzQyNTE&ixlib=rb-1.2.1&q=80">
+        </div>
+        <div class="book-details">
+          <h2>{{ book.title }}</h2>
+          <p><strong>Author:</strong> {{ book.author }}</p>
+          <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+      </div>
+        </div>
+      </div>
+        <div class="cards-container">
+            {% for x in books %}
+            <div class="card">
+              <img src="{{ x.image_url }}" alt="https://images.unsplash.com/photo-1656618020911-1c7a937175fd?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTc1MzQyNTE&ixlib=rb-1.2.1&q=80">
+
+          <div class="card-content">
+            <h2>______</h2>
+            <h3>{{ x.title }}</h3>
+            <p>{{ x.author }}</p>
+            <a href="{% url 'read' x.title %}" class="read_button">READ</a>
+          </div>
+        </div>
+        {% endfor %}
+    </main>
+</body>
+</html>
